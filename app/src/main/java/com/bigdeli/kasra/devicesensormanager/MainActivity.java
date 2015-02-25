@@ -1,5 +1,6 @@
 package com.bigdeli.kasra.devicesensormanager;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -26,9 +27,13 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setIcon(R.drawable.ic_launcher);
 
         SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         List<SensorItem> sensorItems = new ArrayList<>();
@@ -45,12 +50,12 @@ public class MainActivity extends ActionBarActivity {
         int totalSensorSize = mList.size();
         ((TextView) findViewById(R.id.textViewSensorHeader)).setText("Your android device has " + totalSensorSize + " sensors.");
 
-
         ListView sensorListView = (ListView) findViewById(R.id.listViewSensors);
 
         SensorListAdapter listAdapter = new SensorListAdapter(sensorItems);
 
         sensorListView.setAdapter(listAdapter);
+
 
     }
 
