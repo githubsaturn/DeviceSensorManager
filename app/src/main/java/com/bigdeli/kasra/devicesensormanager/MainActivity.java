@@ -197,11 +197,11 @@ public class MainActivity extends ActionBarActivity {
             TextView sensorType = (TextView) convertView.findViewById(R.id.textType);
             TextView sensorVendor = (TextView) convertView.findViewById(R.id.textVendor);
 
-            SensorItem chapter = mSensorItems.get(arg0);
+            SensorItem sensorItem = mSensorItems.get(arg0);
 
-            sensorName.setText(chapter.name);
-            sensorType.setText(chapter.type);
-            sensorVendor.setText(chapter.vendor);
+            sensorName.setText(sensorItem.name);
+            sensorType.setText(sensorItem.type);
+            sensorVendor.setText(sensorItem.vendor);
 
             return convertView;
         }
