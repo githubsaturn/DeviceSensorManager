@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,18 +6,36 @@
     android:padding="0dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textViewSensorHeader"
-        android:background="#11000000"
-        android:textSize="@dimen/bigText"
-        android:padding="15dp"
-        android:text="Your Android device has 0 sensors."
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listViewSensors" />
+        <TextView
+            android:id="@+id/textViewSensorHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#11000000"
+            android:padding="15dp"
+            android:text="Your Android device has 0 sensors."
+            android:textSize="@dimen/bigText" />
 
-</LinearLayout>
+        <ListView
+            android:id="@+id/listViewSensors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <Button
+        android:text="+"
+        android:onClick="addSensorClicked"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:layout_width="40dp"
+        android:textColor="#FFFFFF"
+        android:background="@color/accent_material_light"
+        android:layout_height="40dp" />
+
+</RelativeLayout>

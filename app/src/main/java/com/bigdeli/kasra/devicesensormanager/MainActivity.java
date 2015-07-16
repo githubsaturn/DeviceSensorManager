@@ -1,11 +1,10 @@
 package com.bigdeli.kasra.devicesensormanager;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,13 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     // Debugging
     private final String TAG = AppConfig.getClassName(this);
@@ -31,39 +29,27 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-        actionBar.setIcon(R.drawable.ic_launcher);
-
-        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        List<SensorItem> sensorItems = new ArrayList<>();
-
-        List<Sensor> mList = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-        for (int i = 0; i < mList.size(); i++) {
-            SensorItem sensor = new SensorItem();
-            sensor.name = "Name: " + mList.get(i).getName();
-            sensor.type = "Type: " + convertSensorTypeToString(mList.get(i).getType()) + " Sensor";
-            sensor.vendor = "Made by: " + mList.get(i).getVendor();
-            sensorItems.add(sensor);
-        }
-
-        int totalSensorSize = mList.size();
-        ((TextView) findViewById(R.id.textViewSensorHeader)).setText("Your android device has " + totalSensorSize + " sensors.");
-
         ListView sensorListView = (ListView) findViewById(R.id.listViewSensors);
-
-        SensorListAdapter listAdapter = new SensorListAdapter(sensorItems);
-
+        List<SensorViewData> sensorViewDatas = new ArrayList<>();
+        for (int idx = 0; idx < 5; idx++) {
+            SensorViewData a = new SensorViewData();
+            sensorViewDatas.add(a);
+        }
+        SensorListAdapter listAdapter = new SensorListAdapter(sensorViewDatas);
         sensorListView.setAdapter(listAdapter);
-
 
     }
 
 
+    public void addSensorClicked(View v) {
+        Intent intent = new Intent(this, AddSensorActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -83,80 +69,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    static String convertSensorTypeToString(int idx) {
-        String sensorTypeName;
-        switch (idx) {
-            case Sensor.TYPE_ACCELEROMETER:
-                sensorTypeName = "Accelerometer";
-                break;
-            case Sensor.TYPE_AMBIENT_TEMPERATURE:
-                sensorTypeName = "Ambient Temperature";
-                break;
-            case Sensor.TYPE_GAME_ROTATION_VECTOR:
-                sensorTypeName = "Game Rotation";
-                break;
-            case Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR:
-                sensorTypeName = "Geomagnetic Rotation";
-                break;
-            case Sensor.TYPE_GRAVITY:
-                sensorTypeName = "Gravity";
-                break;
-            case Sensor.TYPE_GYROSCOPE:
-                sensorTypeName = "Gyroscope";
-                break;
-            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
-                sensorTypeName = "Gyroscope Uncalibrated";
-                break;
-            case Sensor.TYPE_HEART_RATE:
-                sensorTypeName = "Heart Rate";
-                break;
-            case Sensor.TYPE_LIGHT:
-                sensorTypeName = "Light";
-                break;
-            case Sensor.TYPE_LINEAR_ACCELERATION:
-                sensorTypeName = "Linear Acceleration";
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                sensorTypeName = "Magnetic Field";
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
-                sensorTypeName = "Magnetic Field Uncalibrated";
-                break;
-            case Sensor.TYPE_PRESSURE:
-                sensorTypeName = "Pressure";
-                break;
-            case Sensor.TYPE_PROXIMITY:
-                sensorTypeName = "Proximity";
-                break;
-            case Sensor.TYPE_RELATIVE_HUMIDITY:
-                sensorTypeName = "Relative Humidity";
-                break;
-            case Sensor.TYPE_ROTATION_VECTOR:
-                sensorTypeName = "Rotation";
-                break;
-            case Sensor.TYPE_STEP_DETECTOR:
-                sensorTypeName = "Step Detector";
-                break;
-            case Sensor.TYPE_STEP_COUNTER:
-                sensorTypeName = "Step Counter";
-                break;
-            case Sensor.TYPE_SIGNIFICANT_MOTION:
-                sensorTypeName = "Significant Motion";
-                break;
-            case Sensor.TYPE_ORIENTATION:
-                sensorTypeName = "Orientation";
-                break;
-            case Sensor.TYPE_TEMPERATURE:
-                sensorTypeName = "Temperature";
-                break;
-            default:
-                sensorTypeName = "Code=" + idx + " is Unknown Type";
-                break;
-        }
-        return sensorTypeName;
-    }
-
-    private class SensorItem {
+    private class SensorViewData {
         String name;
         String vendor;
         String type;
@@ -164,20 +77,20 @@ public class MainActivity extends ActionBarActivity {
 
     private class SensorListAdapter extends BaseAdapter {
 
-        List<SensorItem> mSensorItems;
+        List<SensorViewData> mSensorViewDatas;
 
-        SensorListAdapter(List<SensorItem> sensorItems){
-            this.mSensorItems = sensorItems;
+        SensorListAdapter(List<SensorViewData> sensorItems) {
+            this.mSensorViewDatas = sensorItems;
         }
 
         @Override
         public int getCount() {
-            return mSensorItems.size();
+            return mSensorViewDatas.size();
         }
 
         @Override
-        public SensorItem getItem(int position) {
-            return mSensorItems.get(position);
+        public SensorViewData getItem(int position) {
+            return mSensorViewDatas.get(position);
         }
 
         @Override
@@ -190,21 +103,22 @@ public class MainActivity extends ActionBarActivity {
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.sensor_item, parent, false);
+                convertView = inflater.inflate(R.layout.sensor_view, parent, false);
             }
 
-            TextView sensorName = (TextView) convertView.findViewById(R.id.textName);
-            TextView sensorType = (TextView) convertView.findViewById(R.id.textType);
-            TextView sensorVendor = (TextView) convertView.findViewById(R.id.textVendor);
+//            TextView sensorName = (TextView) convertView.findViewById(R.id.textName);
+//            TextView sensorType = (TextView) convertView.findViewById(R.id.textType);
+//            TextView sensorVendor = (TextView) convertView.findViewById(R.id.textVendor);
 
-            SensorItem sensorItem = mSensorItems.get(arg0);
-
-            sensorName.setText(sensorItem.name);
-            sensorType.setText(sensorItem.type);
-            sensorVendor.setText(sensorItem.vendor);
+//            SensorViewData sensorItem = mSensorViewDatas.get(arg0);
+//
+//            sensorName.setText(sensorItem.name);
+//            sensorType.setText(sensorItem.type);
+//            sensorVendor.setText(sensorItem.vendor);
 
             return convertView;
         }
 
     }
+
 }
