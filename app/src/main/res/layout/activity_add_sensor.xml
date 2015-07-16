@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -7,15 +6,15 @@
 
     <TextView
         android:id="@+id/textViewSensorHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#11000000"
         android:padding="15dp"
-        android:text="0 selected (up to 5 sensors)"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:text="XX" />
 
     <ListView
+        android:id="@+id/listViewSensors"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listViewSensors" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

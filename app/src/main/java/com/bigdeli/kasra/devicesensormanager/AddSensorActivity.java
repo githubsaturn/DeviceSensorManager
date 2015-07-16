@@ -3,10 +3,8 @@ package com.bigdeli.kasra.devicesensormanager;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,16 +16,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class AddSensorActivity extends Activity {
 
+    private static final int MAX_SENSORS_SELECT = 5;
+
     // Debugging
     private final String TAG = AppConfig.getClassName(this);
     private final boolean D = AppConfig.IS_DEBUG_ON;
+
+    int numberOfSelected = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,34 +42,45 @@ public class AddSensorActivity extends Activity {
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
             actionBar.setIcon(R.drawable.ic_launcher);
         }
-        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        final List<SensorItem> sensorItems = new ArrayList<>();
-
-        List<Sensor> mList = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-        for (int i = 0; i < mList.size(); i++) {
-            SensorItem sensor = new SensorItem();
-            sensor.name = "<b>Name:</b> " + mList.get(i).getName();
-            sensor.type = "<b>Type:</b> " + convertSensorTypeToString(mList.get(i).getType()) + " Sensor";
-            sensor.vendor = "<b>Made by:</b> " + mList.get(i).getVendor();
-            sensorItems.add(sensor);
-        }
-
-        int totalSensorSize = mList.size();
-        ((TextView) findViewById(R.id.textViewSensorHeader)).setText("Your android device has " + totalSensorSize + " sensors.");
 
         final ListView sensorListView = (ListView) findViewById(R.id.listViewSensors);
 
-        final SensorListAdapter listAdapter = new SensorListAdapter(sensorItems);
+        final SensorListAdapter listAdapter = new SensorListAdapter(AppApplication.getInstance().getSensors());
 
         sensorListView.setAdapter(listAdapter);
+
+        for (int i = 0; i < AppApplication.getInstance().getSensors().size(); i++) {
+            if (AppApplication.getInstance().getSensors().get(i).isSelected)
+                numberOfSelected++;
+        }
+
         sensorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                sensorItems.get(i).isSelected = !sensorItems.get(i).isSelected;
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                SensorDataHolder clickedSensor = AppApplication.getInstance().getSensors().get(position);
+                if ((numberOfSelected >= MAX_SENSORS_SELECT) && (!clickedSensor.isSelected)) {
+                    Toast.makeText(getApplicationContext(), "Cannot select more than " + MAX_SENSORS_SELECT + " sensors.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                clickedSensor.isSelected = !clickedSensor.isSelected;
+                if (clickedSensor.isSelected) {
+                    numberOfSelected++;
+                } else {
+                    numberOfSelected--;
+                }
+                refreshHeader();
                 listAdapter.notifyDataSetChanged();
             }
         });
 
+        refreshHeader();
+
+
+    }
+
+    private void refreshHeader() {
+
+        ((TextView) findViewById(R.id.textViewSensorHeader)).setText(numberOfSelected + " selected (up to 5 sensors)");
 
     }
 
@@ -95,91 +108,11 @@ public class AddSensorActivity extends Activity {
     }
 
 
-    static String convertSensorTypeToString(int idx) {
-        String sensorTypeName;
-        switch (idx) {
-            case Sensor.TYPE_ACCELEROMETER:
-                sensorTypeName = "Accelerometer";
-                break;
-            case Sensor.TYPE_AMBIENT_TEMPERATURE:
-                sensorTypeName = "Ambient Temperature";
-                break;
-            case Sensor.TYPE_GAME_ROTATION_VECTOR:
-                sensorTypeName = "Game Rotation";
-                break;
-            case Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR:
-                sensorTypeName = "Geomagnetic Rotation";
-                break;
-            case Sensor.TYPE_GRAVITY:
-                sensorTypeName = "Gravity";
-                break;
-            case Sensor.TYPE_GYROSCOPE:
-                sensorTypeName = "Gyroscope";
-                break;
-            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
-                sensorTypeName = "Gyroscope Uncalibrated";
-                break;
-            case Sensor.TYPE_HEART_RATE:
-                sensorTypeName = "Heart Rate";
-                break;
-            case Sensor.TYPE_LIGHT:
-                sensorTypeName = "Light";
-                break;
-            case Sensor.TYPE_LINEAR_ACCELERATION:
-                sensorTypeName = "Linear Acceleration";
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                sensorTypeName = "Magnetic Field";
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
-                sensorTypeName = "Magnetic Field Uncalibrated";
-                break;
-            case Sensor.TYPE_PRESSURE:
-                sensorTypeName = "Pressure";
-                break;
-            case Sensor.TYPE_PROXIMITY:
-                sensorTypeName = "Proximity";
-                break;
-            case Sensor.TYPE_RELATIVE_HUMIDITY:
-                sensorTypeName = "Relative Humidity";
-                break;
-            case Sensor.TYPE_ROTATION_VECTOR:
-                sensorTypeName = "Rotation";
-                break;
-            case Sensor.TYPE_STEP_DETECTOR:
-                sensorTypeName = "Step Detector";
-                break;
-            case Sensor.TYPE_STEP_COUNTER:
-                sensorTypeName = "Step Counter";
-                break;
-            case Sensor.TYPE_SIGNIFICANT_MOTION:
-                sensorTypeName = "Significant Motion";
-                break;
-            case Sensor.TYPE_ORIENTATION:
-                sensorTypeName = "Orientation";
-                break;
-            case Sensor.TYPE_TEMPERATURE:
-                sensorTypeName = "Temperature";
-                break;
-            default:
-                sensorTypeName = "(" + idx + ") Unknown";
-                break;
-        }
-        return sensorTypeName;
-    }
-
-    private class SensorItem {
-        String name;
-        String vendor;
-        String type;
-        boolean isSelected = false;
-    }
-
     private class SensorListAdapter extends BaseAdapter {
 
-        List<SensorItem> mSensorItems;
+        List<SensorDataHolder> mSensorItems;
 
-        SensorListAdapter(List<SensorItem> sensorItems) {
+        SensorListAdapter(List<SensorDataHolder> sensorItems) {
             this.mSensorItems = sensorItems;
         }
 
@@ -189,7 +122,7 @@ public class AddSensorActivity extends Activity {
         }
 
         @Override
-        public SensorItem getItem(int position) {
+        public SensorDataHolder getItem(int position) {
             return mSensorItems.get(position);
         }
 
@@ -211,16 +144,20 @@ public class AddSensorActivity extends Activity {
             TextView sensorVendor = (TextView) convertView.findViewById(R.id.textVendor);
             ImageView isSelectedIcon = (ImageView) convertView.findViewById(R.id.is_selected);
 
-            SensorItem sensorItem = mSensorItems.get(arg0);
+            SensorDataHolder sensorItem = mSensorItems.get(arg0);
 
-            sensorName.setText(Html.fromHtml(sensorItem.name));
-            sensorType.setText(Html.fromHtml(sensorItem.type));
-            sensorVendor.setText(Html.fromHtml(sensorItem.vendor));
 
-            if (sensorItem.isSelected)
+            sensorName.setText(Html.fromHtml("<b>Name:</b> " + sensorItem.getName()));
+            sensorType.setText(Html.fromHtml("<b>Type:</b> " + SensorDataHolder.convertSensorTypeToString(sensorItem.getType()) + " Sensor"));
+            sensorVendor.setText(Html.fromHtml("<b>Made by:</b> " + sensorItem.getVendor()));
+
+            if (sensorItem.isSelected) {
                 isSelectedIcon.setVisibility(View.VISIBLE);
-            else
+                convertView.setBackgroundColor(Color.argb(50, 0, 200, 200));
+            } else {
                 isSelectedIcon.setVisibility(View.INVISIBLE);
+                convertView.setBackgroundColor(Color.TRANSPARENT);
+            }
 
             return convertView;
         }
