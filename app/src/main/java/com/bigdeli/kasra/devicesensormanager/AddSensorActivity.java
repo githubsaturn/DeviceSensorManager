@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,9 +46,9 @@ public class AddSensorActivity extends Activity {
         List<Sensor> mList = mSensorManager.getSensorList(Sensor.TYPE_ALL);
         for (int i = 0; i < mList.size(); i++) {
             SensorItem sensor = new SensorItem();
-            sensor.name = "Name: " + mList.get(i).getName();
-            sensor.type = "Type: " + convertSensorTypeToString(mList.get(i).getType()) + " Sensor";
-            sensor.vendor = "Made by: " + mList.get(i).getVendor();
+            sensor.name = "<b>Name:</b> " + mList.get(i).getName();
+            sensor.type = "<b>Type:</b> " + convertSensorTypeToString(mList.get(i).getType()) + " Sensor";
+            sensor.vendor = "<b>Made by:</b> " + mList.get(i).getVendor();
             sensorItems.add(sensor);
         }
 
@@ -161,7 +162,7 @@ public class AddSensorActivity extends Activity {
                 sensorTypeName = "Temperature";
                 break;
             default:
-                sensorTypeName = "Code=" + idx + " is Unknown Type";
+                sensorTypeName = "(" + idx + ") Unknown";
                 break;
         }
         return sensorTypeName;
@@ -212,9 +213,9 @@ public class AddSensorActivity extends Activity {
 
             SensorItem sensorItem = mSensorItems.get(arg0);
 
-            sensorName.setText(sensorItem.name);
-            sensorType.setText(sensorItem.type);
-            sensorVendor.setText(sensorItem.vendor);
+            sensorName.setText(Html.fromHtml(sensorItem.name));
+            sensorType.setText(Html.fromHtml(sensorItem.type));
+            sensorVendor.setText(Html.fromHtml(sensorItem.vendor));
 
             if (sensorItem.isSelected)
                 isSelectedIcon.setVisibility(View.VISIBLE);

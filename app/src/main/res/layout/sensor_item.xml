@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="20dp">
+    android:padding="10dp">
 
 
     <ImageView
@@ -24,21 +24,18 @@
             android:id="@+id/textName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0Sensor Name: ??????????????"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+            android:text="0Sensor Name: ??????????????" />
 
         <TextView
             android:id="@+id/textType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0Sensor Type: ???????????????"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+            android:text="0Sensor Type: ???????????????" />
 
         <TextView
             android:id="@+id/textVendor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0Sensor Manufacturer: ?????????????"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+            android:text="0Sensor Manufacturer: ?????????????" />
     </LinearLayout>
 </LinearLayout>
