@@ -1,13 +1,8 @@
 package com.bigdeli.kasra.devicesensormanager;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,12 +18,14 @@ public class SensorView extends View {
 //
 //    private onJoyStickClickedListener mClickListener;
 
+    int w, h;
+
 
     private void resizeGraphics(int w) {
 
     }
 
-    private void init(){
+    private void init() {
 
     }
 
@@ -50,17 +47,14 @@ public class SensorView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 //        Log.d("test", "1 ___ widthMeasureSpec= " + widthMeasureSpec + "    heightMeasureSpec=" + heightMeasureSpec);
-        int w = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-        int h = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+        w = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+        h = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
 //        Log.d("test", "2 ___ widthMeasureSpec= " + w + "    heightMeasureSpec=" + h);
 //        Log.d("test", "3 ___ getSuggestedMinimumWidth= " + getSuggestedMinimumWidth() + "    getSuggestedMinimumHeight=" + getSuggestedMinimumHeight());
 //        Log.d("test", "4 ___ widthMeasureSpec= " + MeasureSpec.getSize(widthMeasureSpec) + "    heightMeasureSpec=" + MeasureSpec.getSize(heightMeasureSpec));
 
-        if (w > h)
-            w = h;
-
+        h = (int) (w * 1.0 / 1.6);
         resizeGraphics(w);
-
 
         setMeasuredDimension(w, h);
 //        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -86,7 +80,7 @@ public class SensorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(Color.RED);
+        canvas.drawColor(Color.argb(30,0,0,0));
 
     }
 }
