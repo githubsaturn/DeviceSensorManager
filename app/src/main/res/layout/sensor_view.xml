@@ -3,12 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:clipToPadding="false"
     android:padding="10dp">
 
     <RelativeLayout
-        android:background="#1E000000"
+        android:background="#FFFFFF"
+        android:elevation="6dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
 
         <TextView
             android:id="@+id/text_chart_title"
@@ -20,7 +26,6 @@
 
 
         <Button
-            android:elevation="8dp"
             android:id="@+id/remove_graph"
             android:layout_width="25dp"
             android:layout_height="25dp"
@@ -28,6 +33,7 @@
             android:layout_alignParentTop="true"
             android:layout_margin="7dp"
             android:background="@drawable/btn_round"
+            android:elevation="8dp"
             android:focusable="false"
             android:padding="0dp"
             android:text="—"
@@ -37,17 +43,17 @@
 
 
         <ImageButton
-            android:elevation="8dp"
             android:id="@+id/info_graph"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_margin="7dp"
-            android:scaleType="centerInside"
             android:background="@drawable/btn_round"
+            android:elevation="8dp"
             android:focusable="false"
             android:padding="0dp"
+            android:scaleType="centerInside"
             android:src="@drawable/gear"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
@@ -59,4 +65,5 @@
             android:layout_height="wrap_content" />
 
     </RelativeLayout>
+
 </LinearLayout>
