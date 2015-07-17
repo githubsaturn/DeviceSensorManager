@@ -20,6 +20,8 @@ public class SensorDataHolder {
     ArrayList<Double> z = new ArrayList<>();
     ArrayList<Double> t = new ArrayList<>();
 
+    double avX, avY, avZ;
+
     public SensorDataHolder(Sensor sensor) {
         this.mSensor = sensor;
     }
@@ -27,6 +29,11 @@ public class SensorDataHolder {
     void onDataReceived(double x, double y, double z, double t) {
 
         synchronized (lockData) {
+
+            avX = avX*0.8+x*0.2;
+            avY = avY*0.8+y*0.2;
+            avZ = avZ*0.8+z*0.2;
+
             this.x.add(x);
             this.y.add(y);
             this.z.add(z);
@@ -34,22 +41,32 @@ public class SensorDataHolder {
         }
     }
 
-    double getX() {
+    void clearData(){
 
         synchronized (lockData) {
-            return x.get(x.size() - 1);
+            x.clear();
+            y.clear();
+            z.clear();
+            t.clear();
         }
     }
 
-    double getY() {
+    double getLastX() {
+
         synchronized (lockData) {
-            return y.get(y.size() - 1);
+            return avX;
         }
     }
 
-    double getZ() {
+    double getLastY() {
         synchronized (lockData) {
-            return z.get(z.size() - 1);
+            return avY;
+        }
+    }
+
+    double getLastZ() {
+        synchronized (lockData) {
+            return avZ;
         }
     }
 

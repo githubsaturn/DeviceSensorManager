@@ -19,6 +19,11 @@ public class SensorView extends View {
 //    private onJoyStickClickedListener mClickListener;
 
     int w, h;
+    SensorDataHolder sensor;
+
+    public void setSensor(SensorDataHolder sensor){
+        this.sensor =sensor;
+    }
 
 
     private void resizeGraphics(int w) {
@@ -61,26 +66,12 @@ public class SensorView extends View {
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        boolean consumedTouch = false;
-        if ((event.getAction() != MotionEvent.ACTION_DOWN) && (event.getActionMasked() != MotionEvent.ACTION_POINTER_DOWN))
-            return consumedTouch;
-        int pointerIndex = event.getActionIndex();
-        float x0 = event.getX(pointerIndex);
-        float y0 = event.getY(pointerIndex);
-//        Log.i("test", "____ x=" + event.toString() + "    y=" + y);
-
-        this.postInvalidate();
-        return consumedTouch;
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(Color.argb(30,0,0,0));
+       // canvas.drawColor(Color.argb(30,0,0,0));
 
     }
 }

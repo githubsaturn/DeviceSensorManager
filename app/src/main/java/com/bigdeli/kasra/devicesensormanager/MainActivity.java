@@ -2,7 +2,9 @@ package com.bigdeli.kasra.devicesensormanager;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -17,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,10 @@ public class MainActivity extends Activity {
     private final String TAG = AppConfig.getClassName(this);
     private final boolean D = AppConfig.IS_DEBUG_ON;
 
+    List<SensorDataHolder> sensorViewDatas = new ArrayList<>();
+    List<SensorDataHolder> allSensors;
+    SensorListAdapter listAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,18 +42,30 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         ListView sensorListView = (ListView) findViewById(R.id.listViewSensors);
-        List<SensorViewData> sensorViewDatas = new ArrayList<>();
-        for (int idx = 0; idx < 5; idx++) {
-            SensorViewData a = new SensorViewData();
-            sensorViewDatas.add(a);
-        }
-        SensorListAdapter listAdapter = new SensorListAdapter(sensorViewDatas);
+        allSensors = AppApplication.getInstance().getSensors();
+
+        listAdapter = new SensorListAdapter(sensorViewDatas);
         sensorListView.setAdapter(listAdapter);
 
         findViewById(R.id.add_button).getBackground().setColorFilter(Color.parseColor("#ff009688"), PorterDuff.Mode.MULTIPLY);
 
     }
 
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        sensorViewDatas.clear();
+        for (int idx = 0; idx < allSensors.size(); idx++) {
+            if (allSensors.get(idx).isSelected) {
+                sensorViewDatas.add(allSensors.get(idx));
+            }
+        }
+
+        listAdapter.notifyDataSetChanged();
+
+    }
 
     public void addSensorClicked(View v) {
         Intent intent = new Intent(this, AddSensorActivity.class);
@@ -76,17 +95,11 @@ public class MainActivity extends Activity {
     }
 
 
-    private class SensorViewData {
-        String name;
-        String vendor;
-        String type;
-    }
-
     private class SensorListAdapter extends BaseAdapter {
 
-        List<SensorViewData> mSensorViewDatas;
+        List<SensorDataHolder> mSensorViewDatas;
 
-        SensorListAdapter(List<SensorViewData> sensorItems) {
+        SensorListAdapter(List<SensorDataHolder> sensorItems) {
             this.mSensorViewDatas = sensorItems;
         }
 
@@ -96,7 +109,7 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        public SensorViewData getItem(int position) {
+        public SensorDataHolder getItem(int position) {
             return mSensorViewDatas.get(position);
         }
 
@@ -113,34 +126,65 @@ public class MainActivity extends Activity {
                 convertView = inflater.inflate(R.layout.sensor_view, parent, false);
             }
 
+            SensorDataHolder sensorItem = mSensorViewDatas.get(arg0);
+
             Button removeButton = (Button) convertView.findViewById(R.id.remove_graph);
             removeButton.getBackground().setColorFilter(Color.parseColor("#FF3311"), PorterDuff.Mode.MULTIPLY);
+            removeButton.setTag(sensorItem);
 
             ImageButton infoButton = (ImageButton) convertView.findViewById(R.id.info_graph);
-            infoButton.getBackground().setColorFilter(Color.parseColor("#3333CC"), PorterDuff.Mode.MULTIPLY);
+            infoButton.getBackground().setColorFilter(Color.parseColor("#00746d"), PorterDuff.Mode.MULTIPLY);
+            infoButton.setTag(sensorItem);
 
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
 
-                    Log.d("XX","ON CLICKED___________________________");
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            MainActivity.this);
+
+                    alertDialogBuilder.setTitle("Deleting Sensor");
+
+                    alertDialogBuilder
+                            .setMessage("Do you want to delete the sensor?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mSensorViewDatas.remove(((SensorDataHolder) view.getTag()));
+                                    ((SensorDataHolder) view.getTag()).isSelected = false;
+                                    listAdapter.notifyDataSetChanged();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+
+                    alertDialogBuilder.create().show();
 
                 }
             });
-//            TextView sensorType = (TextView) convertView.findViewById(R.id.textType);
-//            TextView sensorVendor = (TextView) convertView.findViewById(R.id.textVendor);
 
-//            SensorViewData sensorItem = mSensorViewDatas.get(arg0);
-//
-//            sensorName.setText(sensorItem.name);
-//            sensorType.setText(sensorItem.type);
-//            sensorVendor.setText(sensorItem.vendor);
+            infoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Log.d("XX", "ON CLICKED infoButton___________________________");
+
+                }
+            });
+
+            ((TextView) convertView.findViewById(R.id.text_chart_title)).
+                    setText(SensorDataHolder.convertSensorTypeToString(sensorItem.getType()));
+
+            ((SensorView) convertView.findViewById(R.id.sensor_view)).setSensor(sensorItem);
 
             return convertView;
         }
 
         @Override
-        public boolean  areAllItemsEnabled() {
+        public boolean areAllItemsEnabled() {
             return false;
         }
 

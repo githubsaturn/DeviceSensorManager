@@ -6,10 +6,12 @@
     android:padding="10dp">
 
     <RelativeLayout
+        android:background="#1E000000"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/text_chart_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -52,6 +54,7 @@
             android:textStyle="bold" />
 
         <com.bigdeli.kasra.devicesensormanager.SensorView
+            android:id="@+id/sensor_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
