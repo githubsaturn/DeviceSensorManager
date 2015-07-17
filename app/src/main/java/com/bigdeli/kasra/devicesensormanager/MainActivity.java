@@ -68,11 +68,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensorViewDatas.clear();
 
         for (int idx = 0; idx < allSensors.size(); idx++) {
-            if (allSensors.get(idx).isSelected) {
+            if (allSensors.get(idx).getIsSelected()) {
                 sensorViewDatas.add(allSensors.get(idx));
                 allSensors.get(idx).clearData();
                 AppApplication.getInstance().mSensorManager.registerListener
-                        (this, allSensors.get(idx).mSensor, REFRESH_SPEEDS[allSensors.get(idx).refreshRate]);
+                        (this, allSensors.get(idx).getHardwareSensor(), REFRESH_SPEEDS[allSensors.get(idx).getRefreshRate()]);
             }
         }
 
@@ -139,7 +139,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
 
         for (SensorDataHolder s : sensorViewDatas) {
-            if (s.mSensor == sensorEvent.sensor) {
+            if (s.getHardwareSensor() == sensorEvent.sensor) {
 
                 double x = 0;
                 double y = 0;
@@ -224,10 +224,10 @@ public class MainActivity extends Activity implements SensorEventListener {
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     mSensorViewDatas.remove(((SensorDataHolder) view.getTag()));
-                                    ((SensorDataHolder) view.getTag()).isSelected = false;
+                                    ((SensorDataHolder) view.getTag()).setIsSelected(false);
 
                                     AppApplication.getInstance().mSensorManager.unregisterListener(MainActivity.this,
-                                            ((SensorDataHolder) view.getTag()).mSensor);
+                                            ((SensorDataHolder) view.getTag()).getHardwareSensor());
 
                                     listAdapter.notifyDataSetChanged();
                                 }
@@ -262,12 +262,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                             "<b>Type:</b> " + SensorDataHolder.convertSensorTypeToString(sensor.getType()) + " Sensor"
                             + "<br/>" + "<b>Made by:</b> " + sensor.getVendor();
 
-                    ((CheckBox) viewDialog.findViewById(R.id.check_ax1)).setChecked(sensor.isActiveAxis[0]);
-                    ((CheckBox) viewDialog.findViewById(R.id.check_ax2)).setChecked(sensor.isActiveAxis[1]);
-                    ((CheckBox) viewDialog.findViewById(R.id.check_ax3)).setChecked(sensor.isActiveAxis[2]);
-                    ((SeekBar) viewDialog.findViewById(R.id.refresh_rate)).setProgress(sensor.refreshRate);
+                    ((CheckBox) viewDialog.findViewById(R.id.check_ax1)).setChecked(sensor.getIsActiveAxis(0));
+                    ((CheckBox) viewDialog.findViewById(R.id.check_ax2)).setChecked(sensor.getIsActiveAxis(1));
+                    ((CheckBox) viewDialog.findViewById(R.id.check_ax3)).setChecked(sensor.getIsActiveAxis(2));
+                    ((SeekBar) viewDialog.findViewById(R.id.refresh_rate)).setProgress(sensor.getRefreshRate());
 
-                    ((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).setChecked(sensor.isSmoothened);
+                    ((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).setChecked(sensor.getIsSmoothened());
                     ((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).setText(Html.fromHtml("<br/><b>Remove noise</b><br/>" +
                             "<i>may cause data distortion</i>"));
 
@@ -278,20 +278,20 @@ public class MainActivity extends Activity implements SensorEventListener {
                                 @Override
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                    sensor.isActiveAxis[0] = ((CheckBox) viewDialog.findViewById(R.id.check_ax1)).isChecked();
-                                    sensor.isActiveAxis[1] = ((CheckBox) viewDialog.findViewById(R.id.check_ax2)).isChecked();
-                                    sensor.isActiveAxis[2] = ((CheckBox) viewDialog.findViewById(R.id.check_ax3)).isChecked();
+                                    sensor.setIsActiveAxis(0, ((CheckBox) viewDialog.findViewById(R.id.check_ax1)).isChecked());
+                                    sensor.setIsActiveAxis(1, ((CheckBox) viewDialog.findViewById(R.id.check_ax2)).isChecked());
+                                    sensor.setIsActiveAxis(2, ((CheckBox) viewDialog.findViewById(R.id.check_ax3)).isChecked());
 
-                                    sensor.refreshRate = ((SeekBar) viewDialog.findViewById(R.id.refresh_rate)).getProgress();
+                                    sensor.setRefreshRate(((SeekBar) viewDialog.findViewById(R.id.refresh_rate)).getProgress());
 
-                                    sensor.isSmoothened = ((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).isChecked();
+                                    sensor.setIsSmoothened(((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).isChecked());
 
-                                    // unregister for now
+                                    // re-register now
                                     AppApplication.getInstance().mSensorManager.unregisterListener(MainActivity.this,
-                                            sensor.mSensor);
+                                            sensor.getHardwareSensor());
                                     sensor.clearData();
                                     AppApplication.getInstance().mSensorManager.registerListener
-                                            (MainActivity.this, sensor.mSensor, REFRESH_SPEEDS[sensor.refreshRate]);
+                                            (MainActivity.this, sensor.getHardwareSensor(), REFRESH_SPEEDS[sensor.getRefreshRate()]);
 
                                 }
                             });

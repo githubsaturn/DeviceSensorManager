@@ -63,7 +63,7 @@ public class AddSensorActivity extends Activity {
         sensorListView.setAdapter(listAdapter);
 
         for (int i = 0; i < AppApplication.getInstance().getSensors().size(); i++) {
-            if (AppApplication.getInstance().getSensors().get(i).isSelected)
+            if (AppApplication.getInstance().getSensors().get(i).getIsSelected())
                 numberOfSelected++;
         }
 
@@ -71,12 +71,12 @@ public class AddSensorActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 SensorDataHolder clickedSensor = AppApplication.getInstance().getSensors().get(position);
-                if ((numberOfSelected >= MAX_SENSORS_SELECT) && (!clickedSensor.isSelected)) {
+                if ((numberOfSelected >= MAX_SENSORS_SELECT) && (!clickedSensor.getIsSelected())) {
                     Toast.makeText(getApplicationContext(), "Cannot select more than " + MAX_SENSORS_SELECT + " sensors.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                clickedSensor.isSelected = !clickedSensor.isSelected;
-                if (clickedSensor.isSelected) {
+                clickedSensor.setIsSelected(!clickedSensor.getIsSelected());
+                if (clickedSensor.getIsSelected()) {
                     numberOfSelected++;
                 } else {
                     numberOfSelected--;
@@ -141,7 +141,7 @@ public class AddSensorActivity extends Activity {
             sensorType.setText(Html.fromHtml("<b>Type:</b> " + SensorDataHolder.convertSensorTypeToString(sensorItem.getType()) + " Sensor"));
             sensorVendor.setText(Html.fromHtml("<b>Made by:</b> " + sensorItem.getVendor()));
 
-            if (sensorItem.isSelected) {
+            if (sensorItem.getIsSelected()) {
                 isSelectedIcon.setVisibility(View.VISIBLE);
                 convertView.setBackgroundColor(Color.argb(50, 0, 200, 200));
             } else {

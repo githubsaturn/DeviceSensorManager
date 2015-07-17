@@ -1,7 +1,6 @@
 package com.bigdeli.kasra.devicesensormanager;
 
 import android.hardware.Sensor;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -10,28 +9,73 @@ import java.util.ArrayList;
  */
 public class SensorDataHolder {
 
-    Object lockData = new Object();
+    private Object lockData = new Object();
 
-    Sensor mSensor;
+    private boolean isSelected = false;
+    private Sensor mSensor;
 
-    boolean isSelected = false;
-    boolean isBidirectional = false;
+    private boolean isBidirectional = false;
+    private boolean[] isActiveAxis = {true, true, true};
+    private int refreshRate = 3;
+    private boolean isSmoothened = true;
 
-    boolean[] isActiveAxis = {true, true, true};
-    boolean isSmoothened = true;
+    private ArrayList<Double> x = new ArrayList<>();
+    private ArrayList<Double> y = new ArrayList<>();
+    private ArrayList<Double> z = new ArrayList<>();
+    private ArrayList<Long> t = new ArrayList<>();
 
-    int refreshRate = 3;
+    private double avX = 0;
+    private double avY = 0;
+    private double avZ = 0;
+    private double maxValue = 0.00001;
 
 
-    ArrayList<Double> x = new ArrayList<>();
-    ArrayList<Double> y = new ArrayList<>();
-    ArrayList<Double> z = new ArrayList<>();
-    ArrayList<Long> t = new ArrayList<>();
+    public Sensor getHardwareSensor() {
+        return mSensor;
+    }
 
-    double avX = 0;
-    double avY = 0;
-    double avZ = 0;
-    double maxValue = 0.00001;
+    public boolean getIsSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public boolean getIsBidirectional() {
+        return isBidirectional;
+    }
+
+    public boolean getIsActiveAxis(int ax) {
+        return isActiveAxis[ax];
+    }
+
+    public void setIsActiveAxis(int ax, boolean b) {
+        isActiveAxis[ax] = b;
+    }
+
+    public boolean getIsSmoothened() {
+        return isSmoothened;
+    }
+
+    public void setIsSmoothened(boolean isSmoothened) {
+        this.isSmoothened = isSmoothened;
+    }
+
+
+    public int getRefreshRate() {
+        return refreshRate;
+    }
+
+    public void setRefreshRate(int refreshRate) {
+        this.refreshRate = refreshRate;
+    }
+
+
+    public double getMaxValue() {
+        return maxValue;
+    }
+
 
     public SensorDataHolder(Sensor sensor) {
         this.mSensor = sensor;

@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -14,17 +12,11 @@ import android.view.View;
  */
 public class SensorView extends View {
 
-//    public interface onJoyStickClickedListener {
-//        void onItemSelected(int idx);
-//    }
-//
-//    private onJoyStickClickedListener mClickListener;
-
-    int w, h;
-    SensorDataHolder sensor;
-    Paint p = new Paint();
-    float[] hsv = {0, 1, 0.68f};
-    private Paint paintBlack;
+    private int w, h;
+    private SensorDataHolder sensor;
+    private Paint p = new Paint();
+    private float[] hsv = {0, 1, 0.68f};
+    private Paint paintBlack = new Paint();
 
     public void setSensor(SensorDataHolder sensor) {
         this.sensor = sensor;
@@ -32,7 +24,6 @@ public class SensorView extends View {
 
 
     private void init() {
-
 
     }
 
@@ -63,7 +54,6 @@ public class SensorView extends View {
         h = (int) (w * 1.0 / 1.6);
 
 
-        paintBlack = new Paint();
         paintBlack.setColor(Color.rgb(40, 40, 40));
         paintBlack.setTextSize(h / 9);
 
@@ -82,7 +72,7 @@ public class SensorView extends View {
         int x0 = w / 2;
         int range = (int) (w * 0.4);
 
-        if (!sensor.isBidirectional) {
+        if (!sensor.getIsBidirectional()) {
             x0 = (int) (w * 0.1);
             range = (int) (w * 0.8);
         }
@@ -90,9 +80,9 @@ public class SensorView extends View {
 
         int textX = x0 + w / 40;
 
-        double xRatio = sensor.getLastX() / sensor.maxValue;
-        double yRatio = sensor.getLastY() / sensor.maxValue;
-        double zRatio = sensor.getLastZ() / sensor.maxValue;
+        double xRatio = sensor.getLastX() / sensor.getMaxValue();
+        double yRatio = sensor.getLastY() / sensor.getMaxValue();
+        double zRatio = sensor.getLastZ() / sensor.getMaxValue();
         int hRow = h / 7;
         int gap = h / 5;
 

@@ -31,8 +31,8 @@ public class AppApplication extends Application {
             SensorDataHolder sensor = new SensorDataHolder(sensorList.get(i));
             sensors.add(sensor);
             if ((!isOneSensorSelected) &&
-                    (sensor.mSensor.getType() == Sensor.TYPE_ACCELEROMETER)) {
-                sensor.isSelected = true;
+                    (sensor.getHardwareSensor().getType() == Sensor.TYPE_ACCELEROMETER)) {
+                sensor.setIsSelected(true);
                 isOneSensorSelected = true;
             }
         }
