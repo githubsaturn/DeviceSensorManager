@@ -1,6 +1,7 @@
 package com.bigdeli.kasra.devicesensormanager;
 
 import android.hardware.Sensor;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -14,40 +15,65 @@ public class SensorDataHolder {
     Sensor mSensor;
 
     boolean isSelected = false;
+    boolean isBidirectional = false;
+
 
     ArrayList<Double> x = new ArrayList<>();
     ArrayList<Double> y = new ArrayList<>();
     ArrayList<Double> z = new ArrayList<>();
-    ArrayList<Double> t = new ArrayList<>();
+    ArrayList<Long> t = new ArrayList<>();
 
-    double avX, avY, avZ;
+    double avX = 0;
+    double avY = 0;
+    double avZ = 0;
+    double maxValue = 0.00001;
 
     public SensorDataHolder(Sensor sensor) {
         this.mSensor = sensor;
     }
 
-    void onDataReceived(double x, double y, double z, double t) {
+    void onDataReceived(double x, double y, double z, long t) {
 
         synchronized (lockData) {
 
-            avX = avX*0.8+x*0.2;
-            avY = avY*0.8+y*0.2;
-            avZ = avZ*0.8+z*0.2;
+            if (!isBidirectional) {
+                if ((x < 0) || (y < 0) || (z < 0))
+                    isBidirectional = true;
+            }
+
+            if (maxValue < Math.abs(x))
+                maxValue = Math.abs(x);
+
+            if (maxValue < Math.abs(y))
+                maxValue = Math.abs(y);
+
+            if (maxValue < Math.abs(z))
+                maxValue = Math.abs(z);
+
+            avX = avX * 0.8 + x * 0.2;
+            avY = avY * 0.8 + y * 0.2;
+            avZ = avZ * 0.8 + z * 0.2;
+
 
             this.x.add(x);
             this.y.add(y);
             this.z.add(z);
             this.t.add(t);
+
         }
     }
 
-    void clearData(){
+    void clearData() {
 
         synchronized (lockData) {
             x.clear();
             y.clear();
             z.clear();
             t.clear();
+            maxValue = 0.0001;
+            avX = 0;
+            avY = 0;
+            avZ = 0;
         }
     }
 

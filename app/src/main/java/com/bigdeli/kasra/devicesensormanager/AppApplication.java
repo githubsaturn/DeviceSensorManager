@@ -15,19 +15,26 @@ public class AppApplication extends Application {
 
     ArrayList<SensorDataHolder> sensors = null;
     static AppApplication mInstance = null;
+    SensorManager mSensorManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
 
-        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensors = new ArrayList<>();
+        boolean isOneSensorSelected = false;
 
         List<Sensor> sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL);
         for (int i = 0; i < sensorList.size(); i++) {
             SensorDataHolder sensor = new SensorDataHolder(sensorList.get(i));
             sensors.add(sensor);
+            if ((!isOneSensorSelected) &&
+                    (sensor.mSensor.getType() == Sensor.TYPE_ACCELEROMETER)) {
+                sensor.isSelected = true;
+                isOneSensorSelected = true;
+            }
         }
 
     }

@@ -8,6 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 
     // Debugging
     private final String TAG = AppConfig.getClassName(this);
@@ -57,14 +61,24 @@ public class MainActivity extends Activity {
         super.onResume();
 
         sensorViewDatas.clear();
+
         for (int idx = 0; idx < allSensors.size(); idx++) {
             if (allSensors.get(idx).isSelected) {
                 sensorViewDatas.add(allSensors.get(idx));
+                allSensors.get(idx).clearData();
+                AppApplication.getInstance().mSensorManager.registerListener
+                        (this, allSensors.get(idx).mSensor, SensorManager.SENSOR_DELAY_FASTEST);
             }
         }
 
         listAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppApplication.getInstance().mSensorManager.unregisterListener(this);
     }
 
     public void addSensorClicked(View v) {
@@ -92,6 +106,23 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+        for (SensorDataHolder s : sensorViewDatas){
+            if (s.mSensor==sensorEvent.sensor){
+                s.onDataReceived(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2], sensorEvent.timestamp);
+                return;
+            }
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 
 
@@ -152,6 +183,10 @@ public class MainActivity extends Activity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     mSensorViewDatas.remove(((SensorDataHolder) view.getTag()));
                                     ((SensorDataHolder) view.getTag()).isSelected = false;
+
+                                    AppApplication.getInstance().mSensorManager.unregisterListener(MainActivity.this,
+                                            ((SensorDataHolder) view.getTag()).mSensor);
+
                                     listAdapter.notifyDataSetChanged();
                                 }
                             })

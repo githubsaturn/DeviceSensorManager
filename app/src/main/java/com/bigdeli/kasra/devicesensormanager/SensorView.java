@@ -3,7 +3,9 @@ package com.bigdeli.kasra.devicesensormanager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -20,17 +22,17 @@ public class SensorView extends View {
 
     int w, h;
     SensorDataHolder sensor;
+    Paint p = new Paint();
+    float[] hsv = {0, 1, 0.68f};
+    private Paint paintBlack;
 
-    public void setSensor(SensorDataHolder sensor){
-        this.sensor =sensor;
+    public void setSensor(SensorDataHolder sensor) {
+        this.sensor = sensor;
     }
 
-
-    private void resizeGraphics(int w) {
-
-    }
 
     private void init() {
+
 
     }
 
@@ -59,7 +61,11 @@ public class SensorView extends View {
 //        Log.d("test", "4 ___ widthMeasureSpec= " + MeasureSpec.getSize(widthMeasureSpec) + "    heightMeasureSpec=" + MeasureSpec.getSize(heightMeasureSpec));
 
         h = (int) (w * 1.0 / 1.6);
-        resizeGraphics(w);
+
+
+        paintBlack = new Paint();
+        paintBlack.setColor(Color.rgb(40, 40, 40));
+        paintBlack.setTextSize(h / 9);
 
         setMeasuredDimension(w, h);
 //        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -71,7 +77,60 @@ public class SensorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-       // canvas.drawColor(Color.argb(30,0,0,0));
+        // canvas.drawColor(Color.argb(30,0,0,0));
+
+        int x0 = w / 2;
+        int range = (int) (w * 0.4);
+
+        if (!sensor.isBidirectional) {
+            x0 = (int) (w * 0.1);
+            range = (int) (w * 0.8);
+        }
+
+
+        double xRatio = sensor.getLastX() / sensor.maxValue;
+        double yRatio = sensor.getLastY() / sensor.maxValue;
+        double zRatio = sensor.getLastZ() / sensor.maxValue;
+        int hRow = h / 7;
+        int gap = h / 5;
+
+        int startingY = (int) (h * 0.60);
+        hsv[0] = (int) (90 + 268 * Math.abs(xRatio));
+        p.setColor(Color.HSVToColor(175, hsv));
+
+        if (xRatio >= 0)
+            canvas.drawRect(x0, startingY, x0 + (int) (range * xRatio), startingY + hRow, p);
+        else
+            canvas.drawRect(x0 + (int) (range * xRatio), startingY, x0, startingY + hRow, p);
+
+        canvas.drawText(String.format("%.2f", sensor.getLastX()), x0 + w / 20, startingY + (int) (hRow * 0.75), paintBlack);
+
+
+        startingY -= gap;
+        hsv[0] = (int) (90 + 268 * Math.abs(yRatio));
+        p.setColor(Color.HSVToColor(175, hsv));
+
+        if (yRatio >= 0)
+            canvas.drawRect(x0, startingY, x0 + (int) (range * yRatio), startingY + hRow, p);
+        else
+            canvas.drawRect(x0 + (int) (range * yRatio), startingY, x0, startingY + hRow, p);
+
+        canvas.drawText(String.format("%.2f", sensor.getLastY()), x0 + w / 30, startingY + (int) (hRow * 0.75), paintBlack);
+
+
+        startingY -= gap;
+        hsv[0] = (int) (90 + 268 * Math.abs(zRatio));
+        p.setColor(Color.HSVToColor(175, hsv));
+
+        if (zRatio >= 0)
+            canvas.drawRect(x0, startingY, x0 + (int) (range * zRatio), startingY + hRow, p);
+        else
+            canvas.drawRect(x0 + (int) (range * zRatio), startingY, x0, startingY + hRow, p);
+
+        canvas.drawText(String.format("%.2f", sensor.getLastY()), x0 + w / 40, startingY + (int) (hRow * 0.75), paintBlack);
+
+
+        invalidate();
 
     }
 }

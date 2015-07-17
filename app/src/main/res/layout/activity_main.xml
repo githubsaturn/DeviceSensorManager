@@ -17,8 +17,7 @@
             android:layout_height="wrap_content"
             android:background="#11000000"
             android:padding="15dp"
-            android:text="Your Android device has 0 sensors."
-            android:textSize="@dimen/bigText" />
+            android:text="Add sensors to see their values." />
 
         <ListView
             android:id="@+id/listViewSensors"
