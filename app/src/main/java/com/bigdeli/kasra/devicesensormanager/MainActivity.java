@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +41,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     List<SensorDataHolder> allSensors;
     SensorListAdapter listAdapter;
 
-    int[] REFRESH_SPEEDS = {SensorManager.SENSOR_DELAY_UI, SensorManager.SENSOR_DELAY_NORMAL,
+    int[] REFRESH_SPEEDS = {SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI,
             SensorManager.SENSOR_DELAY_GAME, SensorManager.SENSOR_DELAY_FASTEST};
 
     @Override
@@ -105,7 +106,29 @@ public class MainActivity extends Activity implements SensorEventListener {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    MainActivity.this);
+
+            alertDialogBuilder.setTitle("About...");
+            Spanned str = Html.fromHtml("This is an example app to show how sensors can be accessed in an Android App." +
+                    "The source code is available on <a href='github.com/githubsaturn'>GitHub</a>. " +
+                    "Please feel free to drop me a line and say hi :)<br/><br/>" +
+                    "You can select any sensor that is available on your device and read the measurement " +
+                    "from the sensor.");
+
+            alertDialogBuilder
+                    .setMessage(str)
+                    .setCancelable(false)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+            alertDialogBuilder.create().show();
+
             return true;
         }
 

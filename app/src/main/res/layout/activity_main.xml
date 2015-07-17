@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:background="#11000000"
             android:padding="15dp"
-            android:text="Add sensors to see their values." />
+            android:text="Add sensors to see their readings." />
 
         <ListView
             android:id="@+id/listViewSensors"
@@ -37,7 +37,7 @@
         android:layout_margin="16dp"
         android:layout_width="50dp"
         android:textColor="#FFFFFF"
-        android:background="@drawable/btn_remove"
+        android:background="@drawable/btn_round"
         android:layout_height="50dp" />
 
 </RelativeLayout>

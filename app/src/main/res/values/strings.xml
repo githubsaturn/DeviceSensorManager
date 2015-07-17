@@ -3,7 +3,6 @@
 
     <string name="app_name">SensorApp</string>
     <string name="add_sensor">Select Sensors</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
 
 </resources>
