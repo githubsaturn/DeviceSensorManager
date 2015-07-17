@@ -17,6 +17,11 @@ public class SensorDataHolder {
     boolean isSelected = false;
     boolean isBidirectional = false;
 
+    boolean[] isActiveAxis = {true, true, true};
+    boolean isSmoothened = true;
+
+    int refreshRate = 3;
+
 
     ArrayList<Double> x = new ArrayList<>();
     ArrayList<Double> y = new ArrayList<>();
@@ -50,9 +55,15 @@ public class SensorDataHolder {
             if (maxValue < Math.abs(z))
                 maxValue = Math.abs(z);
 
-            avX = avX * 0.8 + x * 0.2;
-            avY = avY * 0.8 + y * 0.2;
-            avZ = avZ * 0.8 + z * 0.2;
+            if (isSmoothened) {
+                avX = avX * 0.8 + x * 0.2;
+                avY = avY * 0.8 + y * 0.2;
+                avZ = avZ * 0.8 + z * 0.2;
+            } else {
+                avX = x;
+                avY = y;
+                avZ = z;
+            }
 
 
             this.x.add(x);
@@ -79,18 +90,29 @@ public class SensorDataHolder {
 
     double getLastX() {
 
+        if (!isActiveAxis[0])
+            return 0;
+
         synchronized (lockData) {
             return avX;
         }
     }
 
     double getLastY() {
+
+        if (!isActiveAxis[1])
+            return 0;
+
         synchronized (lockData) {
             return avY;
         }
     }
 
     double getLastZ() {
+
+        if (!isActiveAxis[2])
+            return 0;
+
         synchronized (lockData) {
             return avZ;
         }

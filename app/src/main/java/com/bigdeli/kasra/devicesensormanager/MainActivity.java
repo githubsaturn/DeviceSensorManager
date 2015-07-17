@@ -1,6 +1,5 @@
 package com.bigdeli.kasra.devicesensormanager;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,7 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     List<SensorDataHolder> sensorViewDatas = new ArrayList<>();
     List<SensorDataHolder> allSensors;
     SensorListAdapter listAdapter;
+
+    int[] REFRESH_SPEEDS = {SensorManager.SENSOR_DELAY_UI, SensorManager.SENSOR_DELAY_NORMAL,
+            SensorManager.SENSOR_DELAY_GAME, SensorManager.SENSOR_DELAY_FASTEST};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 sensorViewDatas.add(allSensors.get(idx));
                 allSensors.get(idx).clearData();
                 AppApplication.getInstance().mSensorManager.registerListener
-                        (this, allSensors.get(idx).mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+                        (this, allSensors.get(idx).mSensor, REFRESH_SPEEDS[allSensors.get(idx).refreshRate]);
             }
         }
 
@@ -111,9 +115,24 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        for (SensorDataHolder s : sensorViewDatas){
-            if (s.mSensor==sensorEvent.sensor){
-                s.onDataReceived(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2], sensorEvent.timestamp);
+        for (SensorDataHolder s : sensorViewDatas) {
+            if (s.mSensor == sensorEvent.sensor) {
+
+                double x = 0;
+                double y = 0;
+                double z = 0;
+
+                try {
+                    x = sensorEvent.values[0];
+                    y = sensorEvent.values[1];
+                    z = sensorEvent.values[2];
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    // for some sensors, not all three values are
+                    // available... in this case, do nothing...
+                }
+
+
+                s.onDataReceived(x, y, z, sensorEvent.timestamp);
                 return;
             }
         }
@@ -205,7 +224,56 @@ public class MainActivity extends Activity implements SensorEventListener {
                 @Override
                 public void onClick(View view) {
 
-                    Log.d("XX", "ON CLICKED infoButton___________________________");
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    // Get the layout inflater
+                    LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+
+                    builder.setTitle("Sensor Settings");
+                    // Inflate and set the layout for the dialog
+                    // Pass null as the parent view because its going in the dialog layout
+                    final View viewDialog = inflater.inflate(R.layout.sensor_config_window, null);
+
+                    final SensorDataHolder sensor = (SensorDataHolder) view.getTag();
+                    String str = "<b>Name:</b> " + sensor.getName() + "<br/>" +
+                            "<b>Type:</b> " + SensorDataHolder.convertSensorTypeToString(sensor.getType()) + " Sensor"
+                            + "<br/>" + "<b>Made by:</b> " + sensor.getVendor();
+
+                    ((CheckBox) viewDialog.findViewById(R.id.check_ax1)).setChecked(sensor.isActiveAxis[0]);
+                    ((CheckBox) viewDialog.findViewById(R.id.check_ax2)).setChecked(sensor.isActiveAxis[1]);
+                    ((CheckBox) viewDialog.findViewById(R.id.check_ax3)).setChecked(sensor.isActiveAxis[2]);
+                    ((SeekBar) viewDialog.findViewById(R.id.refresh_rate)).setProgress(sensor.refreshRate);
+
+                    ((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).setChecked(sensor.isSmoothened);
+                    ((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).setText(Html.fromHtml("<br/><b>Remove noise</b><br/>" +
+                            "<i>may cause data distortion</i>"));
+
+
+                    ((TextView) viewDialog.findViewById(R.id.sensor_info_text)).setText(Html.fromHtml(str));
+                    builder.setView(viewDialog)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    sensor.isActiveAxis[0] = ((CheckBox) viewDialog.findViewById(R.id.check_ax1)).isChecked();
+                                    sensor.isActiveAxis[1] = ((CheckBox) viewDialog.findViewById(R.id.check_ax2)).isChecked();
+                                    sensor.isActiveAxis[2] = ((CheckBox) viewDialog.findViewById(R.id.check_ax3)).isChecked();
+
+                                    sensor.refreshRate = ((SeekBar) viewDialog.findViewById(R.id.refresh_rate)).getProgress();
+
+                                    sensor.isSmoothened = ((CheckBox) viewDialog.findViewById(R.id.check_smoothen)).isChecked();
+
+                                    // unregister for now
+                                    AppApplication.getInstance().mSensorManager.unregisterListener(MainActivity.this,
+                                            sensor.mSensor);
+                                    sensor.clearData();
+                                    AppApplication.getInstance().mSensorManager.registerListener
+                                            (MainActivity.this, sensor.mSensor, REFRESH_SPEEDS[sensor.refreshRate]);
+
+                                }
+                            });
+
+                    builder.create().show();
 
                 }
             });
@@ -218,11 +286,13 @@ public class MainActivity extends Activity implements SensorEventListener {
             return convertView;
         }
 
+        // make the list items unclickable
         @Override
         public boolean areAllItemsEnabled() {
             return false;
         }
 
+        // make the list items unclickable
         @Override
         public boolean isEnabled(int position) {
             return false;

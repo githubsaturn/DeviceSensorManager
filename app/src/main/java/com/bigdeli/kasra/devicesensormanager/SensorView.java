@@ -88,6 +88,8 @@ public class SensorView extends View {
         }
 
 
+        int textX = x0 + w / 40;
+
         double xRatio = sensor.getLastX() / sensor.maxValue;
         double yRatio = sensor.getLastY() / sensor.maxValue;
         double zRatio = sensor.getLastZ() / sensor.maxValue;
@@ -103,7 +105,7 @@ public class SensorView extends View {
         else
             canvas.drawRect(x0 + (int) (range * xRatio), startingY, x0, startingY + hRow, p);
 
-        canvas.drawText(String.format("%.2f", sensor.getLastX()), x0 + w / 20, startingY + (int) (hRow * 0.75), paintBlack);
+        canvas.drawText(String.format("%.2f", sensor.getLastX()), textX, startingY + (int) (hRow * 0.75), paintBlack);
 
 
         startingY -= gap;
@@ -115,7 +117,7 @@ public class SensorView extends View {
         else
             canvas.drawRect(x0 + (int) (range * yRatio), startingY, x0, startingY + hRow, p);
 
-        canvas.drawText(String.format("%.2f", sensor.getLastY()), x0 + w / 30, startingY + (int) (hRow * 0.75), paintBlack);
+        canvas.drawText(String.format("%.2f", sensor.getLastY()), textX, startingY + (int) (hRow * 0.75), paintBlack);
 
 
         startingY -= gap;
@@ -127,7 +129,7 @@ public class SensorView extends View {
         else
             canvas.drawRect(x0 + (int) (range * zRatio), startingY, x0, startingY + hRow, p);
 
-        canvas.drawText(String.format("%.2f", sensor.getLastY()), x0 + w / 40, startingY + (int) (hRow * 0.75), paintBlack);
+        canvas.drawText(String.format("%.2f", sensor.getLastZ()), textX, startingY + (int) (hRow * 0.75), paintBlack);
 
 
         invalidate();
