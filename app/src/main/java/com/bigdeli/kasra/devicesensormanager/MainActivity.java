@@ -4,13 +4,18 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -37,6 +42,8 @@ public class MainActivity extends Activity {
         }
         SensorListAdapter listAdapter = new SensorListAdapter(sensorViewDatas);
         sensorListView.setAdapter(listAdapter);
+
+        findViewById(R.id.add_button).getBackground().setColorFilter(Color.parseColor("#ff009688"), PorterDuff.Mode.MULTIPLY);
 
     }
 
@@ -106,7 +113,20 @@ public class MainActivity extends Activity {
                 convertView = inflater.inflate(R.layout.sensor_view, parent, false);
             }
 
-//            TextView sensorName = (TextView) convertView.findViewById(R.id.textName);
+            Button removeButton = (Button) convertView.findViewById(R.id.remove_graph);
+            removeButton.getBackground().setColorFilter(Color.parseColor("#FF3311"), PorterDuff.Mode.MULTIPLY);
+
+            ImageButton infoButton = (ImageButton) convertView.findViewById(R.id.info_graph);
+            infoButton.getBackground().setColorFilter(Color.parseColor("#3333CC"), PorterDuff.Mode.MULTIPLY);
+
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Log.d("XX","ON CLICKED___________________________");
+
+                }
+            });
 //            TextView sensorType = (TextView) convertView.findViewById(R.id.textType);
 //            TextView sensorVendor = (TextView) convertView.findViewById(R.id.textVendor);
 
@@ -117,6 +137,16 @@ public class MainActivity extends Activity {
 //            sensorVendor.setText(sensorItem.vendor);
 
             return convertView;
+        }
+
+        @Override
+        public boolean  areAllItemsEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return false;
         }
 
     }

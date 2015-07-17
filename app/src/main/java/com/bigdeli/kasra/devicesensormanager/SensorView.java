@@ -64,7 +64,7 @@ public class SensorView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        boolean consumedTouch = true;
+        boolean consumedTouch = false;
         if ((event.getAction() != MotionEvent.ACTION_DOWN) && (event.getActionMasked() != MotionEvent.ACTION_POINTER_DOWN))
             return consumedTouch;
         int pointerIndex = event.getActionIndex();

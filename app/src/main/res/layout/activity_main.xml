@@ -28,14 +28,17 @@
 
     <Button
         android:text="+"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:id="@+id/add_button"
         android:onClick="addSensorClicked"
         android:textSize="20sp"
+        android:elevation="8dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
+        android:layout_margin="16dp"
         android:layout_width="50dp"
         android:textColor="#FFFFFF"
-        android:background="@color/accent_material_light"
+        android:background="@drawable/btn_remove"
         android:layout_height="50dp" />
 
 </RelativeLayout>

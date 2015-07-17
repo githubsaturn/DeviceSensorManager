@@ -16,23 +16,40 @@
             android:layout_marginTop="5dp"
             android:text="Name" />
 
-        <Button
-            android:focusable="false"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="3dp"
-            android:text="Q" />
 
         <Button
-            android:focusable="false"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
+            android:elevation="8dp"
+            android:id="@+id/remove_graph"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="3dp"
-            android:text="x" />
+            android:layout_margin="7dp"
+            android:background="@drawable/btn_remove"
+            android:focusable="false"
+            android:padding="0dp"
+            android:text="—"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+
+        <ImageButton
+            android:elevation="8dp"
+            android:id="@+id/info_graph"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="7dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/btn_remove"
+            android:focusable="false"
+            android:padding="0dp"
+            android:src="@drawable/gear"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
 
         <com.bigdeli.kasra.devicesensormanager.SensorView
             android:layout_width="match_parent"
