@@ -11,9 +11,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +31,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,15 +123,92 @@ public class MainActivity extends Activity implements SensorEventListener {
             Animation fadeFlashAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_anim);
             recordingText.startAnimation(fadeFlashAnimation);
 
+            for (SensorDataHolder s : allSensors) {
+                s.clearData();
+            }
+
         } else {
+
             recButton.setText("  Record");
             recButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.rec_icon, 0, 0, 0);
 
             TextView recordingText = (TextView) findViewById(R.id.recording_text);
             recordingText.clearAnimation();
             findViewById(R.id.recording_text).setVisibility(View.GONE);
+
+            saveAndEmailData();
         }
     }
+
+    private void saveAndEmailData() {
+
+        String fileName = "sensordata.csv";
+
+        StringBuilder fileData = new StringBuilder();
+        for (SensorDataHolder s : sensorViewDatas) {
+            fileData.append(s.generateReport());
+            fileData.append("\n\n\n\n\n\n\n");
+        }
+        String data = fileData.toString();
+        Log.d(TAG, "file size is: " + data.length());
+        try {
+            FileOutputStream fos = openFileOutput(fileName, Context.MODE_WORLD_READABLE);
+            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
+            fos.write(data.getBytes());
+            fos.close();
+            Log.d(TAG, "Created and saved the file! ");
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+
+        try {
+            // Not working ... Needs content providers...
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Sensor Data");
+            intent.putExtra(Intent.EXTRA_TEXT, "Please see attached for the sensor data file.");
+            intent.setType("*/*");
+
+            String sdCard = Environment.getExternalStorageDirectory().getAbsolutePath();
+            Uri uri = Uri.fromFile(new File(sdCard +
+                    new String(new char[sdCard.replaceAll("[^/]", "").length()])
+                            .replace("\0", "/..") + getFilesDir() + "/" + fileName));
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "No emailing app was found...", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (Exception e) {
+
+            Log.e(TAG, "Unable to send data... " + e.toString());
+            Toast.makeText(this, "Unable to email data...", Toast.LENGTH_LONG).show();
+
+        }
+
+    }
+
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available to at least read */
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

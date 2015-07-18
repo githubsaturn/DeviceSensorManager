@@ -19,10 +19,10 @@ public class SensorDataHolder {
     private int refreshRate = 3;
     private boolean isSmoothened = true;
 
-    private ArrayList<Double> x = new ArrayList<>();
-    private ArrayList<Double> y = new ArrayList<>();
-    private ArrayList<Double> z = new ArrayList<>();
-    private ArrayList<Long> t = new ArrayList<>();
+    private ArrayList<Double> xValues = new ArrayList<>();
+    private ArrayList<Double> yValues = new ArrayList<>();
+    private ArrayList<Double> zValues = new ArrayList<>();
+    private ArrayList<Long> timeStamps = new ArrayList<>();
 
     private double avX = 0;
     private double avY = 0;
@@ -110,10 +110,10 @@ public class SensorDataHolder {
             }
 
 
-            this.x.add(x);
-            this.y.add(y);
-            this.z.add(z);
-            this.t.add(t);
+            this.xValues.add(x);
+            this.yValues.add(y);
+            this.zValues.add(z);
+            this.timeStamps.add(t);
 
         }
     }
@@ -121,15 +121,46 @@ public class SensorDataHolder {
     void clearData() {
 
         synchronized (lockData) {
-            x.clear();
-            y.clear();
-            z.clear();
-            t.clear();
+            xValues.clear();
+            yValues.clear();
+            zValues.clear();
+            timeStamps.clear();
             maxValue = 0.0001;
             avX = 0;
             avY = 0;
             avZ = 0;
         }
+    }
+
+    public String generateReport() {
+
+        StringBuilder ret = new StringBuilder();
+
+        String header = "Name: " + getName() + "\n" + "Type: " + convertSensorTypeToString(getType()) +
+                "\n" + "Made by: " + getVendor();
+        header += "t(nanosec) , x_value , y_value, z_value";
+        ret.append(header);
+
+        if (
+                (xValues.size() != yValues.size())
+                        || (xValues.size() != zValues.size())
+                        || (xValues.size() != timeStamps.size())
+                ) {
+            return "Data is inconsistent. Please contact the developer.";
+        }
+
+        for (int idx = 0; idx < xValues.size(); idx++) {
+            ret.append(timeStamps.get(idx));
+            ret.append(',');
+            ret.append(xValues.get(idx));
+            ret.append(',');
+            ret.append(yValues.get(idx));
+            ret.append(',');
+            ret.append(zValues.get(idx));
+            ret.append('\n');
+        }
+
+        return ret.toString();
     }
 
     double getLastX() {
