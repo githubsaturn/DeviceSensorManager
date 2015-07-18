@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -41,6 +43,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     List<SensorDataHolder> allSensors;
     SensorListAdapter listAdapter;
 
+    boolean isRecording = false;
+
     int[] REFRESH_SPEEDS = {SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI,
             SensorManager.SENSOR_DELAY_GAME, SensorManager.SENSOR_DELAY_FASTEST};
 
@@ -57,6 +61,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensorListView.setAdapter(listAdapter);
 
         findViewById(R.id.add_button).getBackground().setColorFilter(Color.parseColor("#ff009688"), PorterDuff.Mode.MULTIPLY);
+
+        TextView recordingText = (TextView) findViewById(R.id.recording_text);
+        Animation fadeFlashAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_anim);
+        recordingText.startAnimation(fadeFlashAnimation);
+
 
     }
 
@@ -89,6 +98,31 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void addSensorClicked(View v) {
         Intent intent = new Intent(this, AddSensorActivity.class);
         startActivity(intent);
+    }
+
+    public void recordButtonClicked(View v) {
+
+        Button recButton = (Button) findViewById(R.id.rec_button);
+
+        isRecording = !isRecording;
+
+        if (isRecording) {
+            recButton.setText("  Stop");
+            recButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stop_icon, 0, 0, 0);
+            findViewById(R.id.recording_text).setVisibility(View.VISIBLE);
+
+            TextView recordingText = (TextView) findViewById(R.id.recording_text);
+            Animation fadeFlashAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_anim);
+            recordingText.startAnimation(fadeFlashAnimation);
+
+        } else {
+            recButton.setText("  Record");
+            recButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.rec_icon, 0, 0, 0);
+
+            TextView recordingText = (TextView) findViewById(R.id.recording_text);
+            recordingText.clearAnimation();
+            findViewById(R.id.recording_text).setVisibility(View.GONE);
+        }
     }
 
     @Override

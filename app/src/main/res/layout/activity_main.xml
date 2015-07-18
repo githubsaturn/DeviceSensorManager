@@ -7,18 +7,44 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:background="#0F000000"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#0F000000"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewSensorHeader"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#11000000"
-            android:padding="15dp"
-            android:text="Add sensors to see their readings." />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/rec_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_rect"
+                android:drawableLeft="@drawable/rec_icon"
+                android:minWidth="120dp"
+                android:onClick="recordButtonClicked"
+                android:paddingBottom="7dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="7dp"
+                android:text="  Record"
+                android:textColor="#FFF" />
+
+            <TextView
+                android:id="@+id/recording_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:text="Recording"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="#FF4444"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/listViewSensors"
@@ -27,18 +53,18 @@
     </LinearLayout>
 
     <Button
-        android:text="+"
-        android:textAppearance="@android:style/TextAppearance.Large"
         android:id="@+id/add_button"
-        android:onClick="addSensorClicked"
-        android:textSize="20sp"
-        android:elevation="8dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:layout_width="50dp"
-        android:textColor="#FFFFFF"
         android:background="@drawable/btn_round"
-        android:layout_height="50dp" />
+        android:elevation="8dp"
+        android:onClick="addSensorClicked"
+        android:text="+"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
 
 </RelativeLayout>
