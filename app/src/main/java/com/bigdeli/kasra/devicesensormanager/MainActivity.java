@@ -40,6 +40,8 @@ import java.util.List;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
+    private static final String KEY_RECORDING = "recording";
+
     // Debugging
     private final String TAG = AppConfig.getClassName(this);
     private final boolean D = AppConfig.IS_DEBUG_ON;
@@ -50,13 +52,17 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     boolean isRecording = false;
 
-    int[] REFRESH_SPEEDS = {SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI,
+    final int[] REFRESH_SPEEDS = {SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI,
             SensorManager.SENSOR_DELAY_GAME, SensorManager.SENSOR_DELAY_FASTEST};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null)
+            isRecording = savedInstanceState.getBoolean(KEY_RECORDING);
+
         setContentView(R.layout.activity_main);
 
         ListView sensorListView = (ListView) findViewById(R.id.listViewSensors);
@@ -67,11 +73,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         findViewById(R.id.add_button).getBackground().setColorFilter(Color.parseColor("#ff009688"), PorterDuff.Mode.MULTIPLY);
 
-        TextView recordingText = (TextView) findViewById(R.id.recording_text);
-        Animation fadeFlashAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_anim);
-        recordingText.startAnimation(fadeFlashAnimation);
+    }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(KEY_RECORDING, isRecording);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -79,15 +86,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         super.onResume();
 
-        sensorViewDatas.clear();
+        for (SensorDataHolder s : allSensors) {
 
-        for (int idx = 0; idx < allSensors.size(); idx++) {
-            if (allSensors.get(idx).getIsSelected()) {
-                sensorViewDatas.add(allSensors.get(idx));
-                allSensors.get(idx).clearData();
+            sensorViewDatas.remove(s);
+
+            if (s.getIsSelected()) {
+                sensorViewDatas.add(s);
                 AppApplication.getInstance().mSensorManager.registerListener
-                        (this, allSensors.get(idx).getHardwareSensor(), REFRESH_SPEEDS[allSensors.get(idx).getRefreshRate()]);
+                        (this, s.getHardwareSensor(), REFRESH_SPEEDS[s.getRefreshRate()]);
+            } else {
+                AppApplication.getInstance().mSensorManager.unregisterListener(MainActivity.this,
+                        (s.getHardwareSensor()));
             }
+
         }
 
         listAdapter.notifyDataSetChanged();
@@ -107,6 +118,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     private void updateHeader() {
+
         if (sensorViewDatas.size() > 0) {
             findViewById(R.id.add_sensor_text).setVisibility(View.GONE);
             findViewById(R.id.layout_record).setVisibility(View.VISIBLE);
@@ -114,13 +126,9 @@ public class MainActivity extends Activity implements SensorEventListener {
             findViewById(R.id.layout_record).setVisibility(View.GONE);
             findViewById(R.id.add_sensor_text).setVisibility(View.VISIBLE);
         }
-    }
 
-    public void recordButtonClicked(View v) {
 
         Button recButton = (Button) findViewById(R.id.rec_button);
-
-        isRecording = !isRecording;
 
         if (isRecording) {
             recButton.setText("Stop");
@@ -131,10 +139,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             Animation fadeFlashAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_anim);
             recordingText.startAnimation(fadeFlashAnimation);
 
-            for (SensorDataHolder s : allSensors) {
-                s.clearData();
-            }
-
         } else {
 
             recButton.setText("Record");
@@ -143,6 +147,25 @@ public class MainActivity extends Activity implements SensorEventListener {
             TextView recordingText = (TextView) findViewById(R.id.recording_text);
             recordingText.clearAnimation();
             findViewById(R.id.recording_text).setVisibility(View.GONE);
+
+        }
+
+    }
+
+    public void recordButtonClicked(View v) {
+
+
+        isRecording = !isRecording;
+
+        updateHeader();
+
+        if (isRecording) {
+
+            for (SensorDataHolder s : allSensors) {
+                s.clearData();
+            }
+
+        } else {
 
             saveAndEmailData();
         }
@@ -351,7 +374,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                 }
-                            });
+                            })
+                            .setCancelable(true);
 
                     alertDialogBuilder.create().show();
 
