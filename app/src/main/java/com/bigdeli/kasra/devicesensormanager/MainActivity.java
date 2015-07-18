@@ -33,10 +33,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,14 +143,24 @@ public class MainActivity extends Activity implements SensorEventListener {
         String fileName = "sensordata.csv";
 
         StringBuilder fileData = new StringBuilder();
+
+        long earliestTimeStamp = 0;
+        if (sensorViewDatas.size() > 0)
+            earliestTimeStamp = sensorViewDatas.get(0).getEarliestTimeStamp();
+
         for (SensorDataHolder s : sensorViewDatas) {
-            fileData.append(s.generateReport());
+            if (s.getEarliestTimeStamp() < earliestTimeStamp)
+                earliestTimeStamp = s.getEarliestTimeStamp();
+        }
+
+        for (SensorDataHolder s : sensorViewDatas) {
+            fileData.append(s.generateReport(earliestTimeStamp));
             fileData.append("\n\n\n\n\n\n\n");
         }
         String data = fileData.toString();
         Log.d(TAG, "file size is: " + data.length());
         try {
-            FileOutputStream fos = openFileOutput(fileName, Context.MODE_WORLD_READABLE);
+            FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
             //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
             fos.write(data.getBytes());
             fos.close();
@@ -169,10 +177,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             intent.putExtra(Intent.EXTRA_TEXT, "Please see attached for the sensor data file.");
             intent.setType("*/*");
 
-            String sdCard = Environment.getExternalStorageDirectory().getAbsolutePath();
-            Uri uri = Uri.fromFile(new File(sdCard +
-                    new String(new char[sdCard.replaceAll("[^/]", "").length()])
-                            .replace("\0", "/..") + getFilesDir() + "/" + fileName));
+            Uri uri = Uri.parse("content://" + getPackageName() + "/" + fileName);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);

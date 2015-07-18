@@ -132,13 +132,21 @@ public class SensorDataHolder {
         }
     }
 
-    public String generateReport() {
+    public long getEarliestTimeStamp() {
+        if (timeStamps.size() < 1)
+            return 0;
+        else
+            return timeStamps.get(0);
+    }
+
+    public String generateReport(long earliestTimeStamped) {
 
         StringBuilder ret = new StringBuilder();
 
         String header = "Name: " + getName() + "\n" + "Type: " + convertSensorTypeToString(getType()) +
                 "\n" + "Made by: " + getVendor();
         header += "t(nanosec) , x_value , y_value, z_value";
+        header += "\n";
         ret.append(header);
 
         if (
@@ -150,7 +158,7 @@ public class SensorDataHolder {
         }
 
         for (int idx = 0; idx < xValues.size(); idx++) {
-            ret.append(timeStamps.get(idx));
+            ret.append((timeStamps.get(idx) - earliestTimeStamped));
             ret.append(',');
             ret.append(xValues.get(idx));
             ret.append(',');
