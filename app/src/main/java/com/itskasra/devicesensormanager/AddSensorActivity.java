@@ -1,4 +1,4 @@
-package com.bigdeli.kasra.devicesensormanager;
+package com.itskasra.devicesensormanager;
 
 import android.app.ActionBar;
 import android.app.Activity;

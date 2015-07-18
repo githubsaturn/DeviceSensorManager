@@ -1,4 +1,4 @@
-package com.bigdeli.kasra.devicesensormanager;
+package com.itskasra.devicesensormanager;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

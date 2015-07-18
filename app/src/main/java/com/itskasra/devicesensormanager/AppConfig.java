@@ -1,4 +1,4 @@
-package com.bigdeli.kasra.devicesensormanager;
+package com.itskasra.devicesensormanager;
 
 /**
  * Created by kbigdeli on 2/10/2015.

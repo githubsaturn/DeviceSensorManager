@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bigdeli.kasra.devicesensormanager">
+    package="com.itskasra.devicesensormanager">
 
     <uses-sdk android:minSdkVersion="14" />
     <application
-        android:name=".AppApplication"
+        android:name="com.itskasra.devicesensormanager.AppApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
 
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.itskasra.devicesensormanager.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,13 +20,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddSensorActivity"
+            android:name="com.itskasra.devicesensormanager.AddSensorActivity"
             android:label="@string/add_sensor"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"></activity>
 
         <provider
-            android:name=".MyProvider"
-            android:authorities="com.bigdeli.kasra.devicesensormanager"
+            android:name="com.itskasra.devicesensormanager.MyProvider"
+            android:authorities="com.itskasra.devicesensormanager"
             android:exported="true" />
     </application>
 

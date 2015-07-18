@@ -1,4 +1,4 @@
-package com.bigdeli.kasra.devicesensormanager;
+package com.itskasra.devicesensormanager;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,4 +1,4 @@
-package com.bigdeli.kasra.devicesensormanager;
+package com.itskasra.devicesensormanager;
 
 import android.app.Activity;
 import android.app.AlertDialog;

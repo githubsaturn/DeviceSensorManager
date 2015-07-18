@@ -55,7 +55,7 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
-        <com.bigdeli.kasra.devicesensormanager.SensorView
+        <com.itskasra.devicesensormanager.SensorView
             android:id="@+id/sensor_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
