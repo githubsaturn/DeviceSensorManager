@@ -113,6 +113,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void addSensorClicked(View v) {
+        isRecording=false;
+        updateHeader();
         Intent intent = new Intent(this, AddSensorActivity.class);
         startActivity(intent);
     }

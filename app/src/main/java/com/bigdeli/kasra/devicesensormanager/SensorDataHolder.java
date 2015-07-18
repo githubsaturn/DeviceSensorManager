@@ -145,6 +145,7 @@ public class SensorDataHolder {
 
         String header = "Name: " + getName() + "\n" + "Type: " + convertSensorTypeToString(getType()) +
                 "\n" + "Made by: " + getVendor();
+        header += "\n";
         header += "t(nanosec) , x_value , y_value, z_value";
         header += "\n";
         ret.append(header);
