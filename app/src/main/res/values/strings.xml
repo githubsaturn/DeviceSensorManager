@@ -3,6 +3,17 @@
 
     <string name="app_name">SensorApp</string>
     <string name="add_sensor">Select Sensors</string>
+    <string name="about_activity">About</string>
+
+    <string name="about_text">This is an example app to show how sensors can be accessed in an Android App.
+        The app scans your device and finds all sensors available on the device. You can select a sensor and monitor
+        the sensor reading in real-time. You can also record the readings and email the raw data for post-processing.
+        You can select multiple sensors (up to 5) at the same time and have their measurement recorded.
+        \n
+        \nThis is an open-source free project. The source code is available on <a href="http://github.com/githubsaturn/DeviceSensorManager">GitHub</a>.
+        Please feel free to drop me a line if you have any question \n
+        \nYou can select any sensor that is available on your device and read the measurement from the sensor.</string>
+
     <string name="action_about">About</string>
 
 </resources>

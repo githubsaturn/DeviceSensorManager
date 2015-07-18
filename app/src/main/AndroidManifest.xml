@@ -23,6 +23,10 @@
             android:name=".AddSensorActivity"
             android:label="@string/add_sensor"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"></activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about_activity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"></activity>
 
         <provider
             android:name=".MyProvider"

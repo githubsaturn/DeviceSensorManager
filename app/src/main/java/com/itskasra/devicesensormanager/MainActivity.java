@@ -14,7 +14,6 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -113,10 +112,18 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void addSensorClicked(View v) {
-        isRecording=false;
-        updateHeader();
+
+        cancelRecording();
         Intent intent = new Intent(this, AddSensorActivity.class);
         startActivity(intent);
+    }
+
+    private void cancelRecording() {
+        if (isRecording) {
+            Toast.makeText(getApplicationContext(), "Recording is aborted...", Toast.LENGTH_SHORT).show();
+        }
+        isRecording = false;
+        updateHeader();
     }
 
     private void updateHeader() {
@@ -246,26 +253,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
 
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    MainActivity.this);
+            cancelRecording();
 
-            alertDialogBuilder.setTitle("About...");
-            Spanned str = Html.fromHtml("This is an example app to show how sensors can be accessed in an Android App." +
-                    "The source code is available on <a href='github.com/githubsaturn'>GitHub</a>. " +
-                    "Please feel free to drop me a line and say hi :)<br/><br/>" +
-                    "You can select any sensor that is available on your device and read the measurement " +
-                    "from the sensor.");
-
-            alertDialogBuilder
-                    .setMessage(str)
-                    .setCancelable(false)
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                        }
-                    });
-
-            alertDialogBuilder.create().show();
+            Intent i = new Intent(getApplicationContext(), AboutActivity.class);
+            startActivity(i);
 
             return true;
         }
@@ -351,6 +342,9 @@ public class MainActivity extends Activity implements SensorEventListener {
                 @Override
                 public void onClick(final View view) {
 
+
+                    cancelRecording();
+
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             MainActivity.this);
 
@@ -388,6 +382,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                 @Override
                 public void onClick(View view) {
 
+
+                    cancelRecording();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     // Get the layout inflater
