@@ -4,14 +4,14 @@
 
     <uses-sdk android:minSdkVersion="14" />
     <application
-        android:name="com.itskasra.devicesensormanager.AppApplication"
+        android:name=".AppApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
 
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.itskasra.devicesensormanager.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,15 +20,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.itskasra.devicesensormanager.AddSensorActivity"
+            android:name=".AddSensorActivity"
             android:label="@string/add_sensor"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"></activity>
 
         <provider
-            android:name="com.itskasra.devicesensormanager.MyProvider"
+            android:name=".MyProvider"
             android:authorities="com.itskasra.devicesensormanager"
             android:exported="true" />
     </application>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>
