@@ -13,7 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -92,6 +91,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
 
         listAdapter.notifyDataSetChanged();
+        updateHeader();
 
     }
 
@@ -106,6 +106,16 @@ public class MainActivity extends Activity implements SensorEventListener {
         startActivity(intent);
     }
 
+    private void updateHeader() {
+        if (sensorViewDatas.size() > 0) {
+            findViewById(R.id.add_sensor_text).setVisibility(View.GONE);
+            findViewById(R.id.layout_record).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.layout_record).setVisibility(View.GONE);
+            findViewById(R.id.add_sensor_text).setVisibility(View.VISIBLE);
+        }
+    }
+
     public void recordButtonClicked(View v) {
 
         Button recButton = (Button) findViewById(R.id.rec_button);
@@ -113,7 +123,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         isRecording = !isRecording;
 
         if (isRecording) {
-            recButton.setText("  Stop");
+            recButton.setText("Stop");
             recButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stop_icon, 0, 0, 0);
             findViewById(R.id.recording_text).setVisibility(View.VISIBLE);
 
@@ -127,7 +137,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         } else {
 
-            recButton.setText("  Record");
+            recButton.setText("Record");
             recButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.rec_icon, 0, 0, 0);
 
             TextView recordingText = (TextView) findViewById(R.id.recording_text);
@@ -193,27 +203,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
 
     }
-
-
-    /* Checks if external storage is available for read and write */
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    /* Checks if external storage is available to at least read */
-    public boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -354,6 +343,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                                             ((SensorDataHolder) view.getTag()).getHardwareSensor());
 
                                     listAdapter.notifyDataSetChanged();
+                                    updateHeader();
+
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
