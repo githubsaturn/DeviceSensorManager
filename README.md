@@ -14,6 +14,26 @@ By reading the code, you can learn:
  * and lots of other small things!
 
 
+
 You can download it from [Google Play](https://play.google.com/store/apps/details?id=com.itskasra.devicesensormanager).
 
- 
+
+---
+### Screenshots
+
+---
+
+![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.27.png)
+
+---
+---
+![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.42.png)
+
+---
+---
+![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.49.png)
+
+---
+---
+![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.58.png)
+
