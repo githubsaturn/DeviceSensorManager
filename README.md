@@ -1,10 +1,19 @@
-# DeviceSensorManager
-Sensor Manager for Android Devices
+# SensorApp
 
-This is an ongoing project -- it is intended to provide a unified platform to gather information from different sensors on an Android device.
+This is a simple example app that show how you can connect to the sensors installed on an android device and how to read the measuement. To run, make a clone and open project with Android Studio.
 
-Expected Timeline:
 
-* Backbone for UI and framework - June 2015
-* Initial data gathering and crude exporting capabilities - Aug 2015
-* First release -- Sept 2015
+By reading the code, you can learn:
+ * how to listen to a sensor
+ * how to reduce the noise
+ * how to change the sampling time (refresh rate)
+ * save measurement in a file and share that file with other apps (content providers)
+ * how to work with customized ListView and clickable items in them.
+ * how to share data between activities
+ * custom views with highly customized behaviour
+ * and lots of other small things!
+
+
+You can download it from [Google Play](https://play.google.com/store/apps/details?id=com.itskasra.devicesensormanager).
+
+ 
