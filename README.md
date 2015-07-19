@@ -23,17 +23,17 @@ You can download it from [Google Play](https://play.google.com/store/apps/detail
 
 ---
 
-![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.27.png)
+![](https://github.com/githubsaturn/DeviceSensorManager/blob/master/screenshots/2015-07-18%2023-1.png)
 
 ---
 ---
-![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.42.png)
+![](https://github.com/githubsaturn/DeviceSensorManager/blob/master/screenshots/2015-07-18%2023-2.png)
 
 ---
 ---
-![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.49.png)
+![](https://github.com/githubsaturn/DeviceSensorManager/blob/master/screenshots/2015-07-18%2023-3.png)
 
 ---
 ---
-![](https://raw.githubusercontent.com/githubsaturn/DeviceSensorManager/master/screenshots/2015-07-18%2023.38.58.png)
+![](https://github.com/githubsaturn/DeviceSensorManager/blob/master/screenshots/2015-07-18%2023-4.png)
 
