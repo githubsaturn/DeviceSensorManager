@@ -218,7 +218,8 @@ public class MainActivity extends Activity implements SensorEventListener {
             intent.putExtra(Intent.EXTRA_SUBJECT, "Sensor Data");
             intent.putExtra(Intent.EXTRA_TEXT, "Please see attached for the sensor data file.");
             intent.setType("*/*");
-
+            
+            // TODO try Intent.FLAG_GRANT_READ_URI_PERMISSION 
             Uri uri = Uri.parse("content://" + getPackageName() + "/" + fileName);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             if (intent.resolveActivity(getPackageManager()) != null) {
